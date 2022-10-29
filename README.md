@@ -85,10 +85,21 @@ ex) : 여행 -> travel 등
 
 ## json body
 ### users
-
+### board
 
 ## api
 ### users
+```
+
+```
+### board
+```
+{
+    "title" : "test1",
+    "content" : "test content.",
+    "category" : "travel"
+}
+```
 
 ## DB ERD diagram
 

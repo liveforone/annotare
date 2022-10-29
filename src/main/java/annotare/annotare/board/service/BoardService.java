@@ -1,7 +1,10 @@
 package annotare.annotare.board.service;
 
 import annotare.annotare.board.model.Board;
+import annotare.annotare.board.model.BoardDto;
 import annotare.annotare.board.repository.BoardRepository;
+import annotare.annotare.user.model.Users;
+import annotare.annotare.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,8 +19,18 @@ import java.util.List;
 public class BoardService {
 
     private final BoardRepository boardRepository;
+    private final UserRepository userRepository;
 
     public Page<Board> getBoardList(Pageable pageable) {
         return boardRepository.findBoardAll(pageable);
+    }
+
+    @Transactional
+    public Long saveBoard(String writer, BoardDto boardDto) {
+        Users users = userRepository.findByEmail(writer);
+
+        boardDto.setUsers(users);
+
+        return boardRepository.save(boardDto.toEntity()).getId();
     }
 }

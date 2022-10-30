@@ -33,4 +33,13 @@ public class BoardService {
 
         return boardRepository.save(boardDto.toEntity()).getId();
     }
+
+    public Board getDetail(Long id) {
+        return boardRepository.findOneById(id);
+    }
+
+    @Transactional
+    public void updateView(Long id) {
+        boardRepository.updateView(id);
+    }
 }

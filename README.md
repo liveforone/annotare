@@ -121,5 +121,5 @@ ex) : 여행 -> travel 등
 Feat : 추가
 Fix : 수정
 Docs : 문서수정
-Refeactor : 리팩토링
+Refactor : 리팩토링
 첫 글자는 대문자로

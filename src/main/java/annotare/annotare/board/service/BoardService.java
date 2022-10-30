@@ -37,6 +37,10 @@ public class BoardService {
         return boardRepository.findCategoryList(category, pageable);
     }
 
+    public Page<Board> getBoardListForUser(String email, Pageable pageable) {
+        return boardRepository.findByUsersEmail(email, pageable);
+    }
+
     @Transactional
     public Long saveBoard(String writer, BoardDto boardDto) {
         Users users = userRepository.findByEmail(writer);

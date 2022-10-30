@@ -172,6 +172,4 @@ public class BoardController {
                 .headers(httpHeaders)
                 .build();
     }
-
-    //작가/마이페이지
 }

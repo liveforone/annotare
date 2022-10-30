@@ -22,6 +22,9 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     @Query("select b from Board b join b.users where b.category = :category")
     Page<Board> findCategoryList(@Param("category") String category, Pageable pageable);
 
+    @Query("select b from Board b join b.users u where u.email = :email")
+    Page<Board> findByUsersEmail(@Param("email") String email, Pageable pageable);
+
     @Modifying
     @Query("update Board b set b.view = b.view + 1 where b.id = :id")
     void updateView(@Param("id") Long id);

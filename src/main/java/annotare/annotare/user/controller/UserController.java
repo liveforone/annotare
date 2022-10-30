@@ -1,18 +1,22 @@
 package annotare.annotare.user.controller;
 
+import annotare.annotare.board.model.Board;
+import annotare.annotare.board.service.BoardService;
 import annotare.annotare.user.model.Role;
 import annotare.annotare.user.model.UserDto;
 import annotare.annotare.user.model.UserResponseDto;
 import annotare.annotare.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.net.URI;
@@ -24,6 +28,7 @@ import java.security.Principal;
 public class UserController {
 
     private final UserService userService;
+    private final BoardService boardService;
 
     //== 메인 페이지 ==//
     @GetMapping("/")
@@ -81,7 +86,31 @@ public class UserController {
     /user/logout 으로 post 하면 된다.
      */
 
-    //mypage, 작가페이지 넣기
+    @GetMapping("/user/mypage")
+    public ResponseEntity<Page<Board>> myPage(
+            @PageableDefault(page = 0, size = 10)
+            @SortDefault.SortDefaults({
+                    @SortDefault(sort = "id", direction = Sort.Direction.DESC)
+            }) Pageable pageable,
+            Principal principal
+    ) {
+        Page<Board> board = boardService.getBoardListForUser(principal.getName(), pageable);
+
+        return ResponseEntity.ok(board);
+    }
+
+    @GetMapping("/user/writer/{writer}")
+    public ResponseEntity<Page<Board>> writerPage(
+            @PageableDefault(page = 0, size = 10)
+            @SortDefault.SortDefaults({
+                    @SortDefault(sort = "id", direction = Sort.Direction.DESC)
+            }) Pageable pageable,
+            @PathVariable("writer") String writer
+    ) {
+        Page<Board> board = boardService.getBoardListForUser(writer, pageable);
+
+        return ResponseEntity.ok(board);
+    }
 
     //== 접근 거부 페이지 ==//
     @GetMapping("/user/prohibition")

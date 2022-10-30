@@ -85,10 +85,6 @@ ex) : 여행 -> travel 등
 
 ## json body
 ### users
-### board
-
-## api
-### users
 ```
 
 ```
@@ -106,10 +102,13 @@ ex) : 여행 -> travel 등
 }
 ```
 
+## api
+### users
+
+### board
+
+
 ## DB ERD diagram
-
-
-게시글 수정시 카테고리 고민하기
 
 좋은 커밋 메세지
 Feat : 추가

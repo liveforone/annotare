@@ -29,6 +29,14 @@ public class BoardService {
         return boardRepository.findOneById(id);
     }
 
+    public Page<Board> searchBoard(String keyword, Pageable pageable) {
+        return boardRepository.searchByTitle(keyword, pageable);
+    }
+
+    public Page<Board> getCategoryList(String category, Pageable pageable) {
+        return boardRepository.findCategoryList(category, pageable);
+    }
+
     @Transactional
     public Long saveBoard(String writer, BoardDto boardDto) {
         Users users = userRepository.findByEmail(writer);

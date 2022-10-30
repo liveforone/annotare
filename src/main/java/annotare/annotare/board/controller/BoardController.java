@@ -27,6 +27,9 @@ public class BoardController {
 
     private final BoardService boardService;
 
+    /*
+    * 게시글 홈에는 최신순으로 정렬.
+     */
     @GetMapping("/board")
     public ResponseEntity<?> boardHome(
             @PageableDefault(page = 0, size = 10)
@@ -37,6 +40,40 @@ public class BoardController {
         Page<Board> boardList = boardService.getBoardList(pageable);
 
         return ResponseEntity.ok(boardList);
+    }
+
+    /*
+    * 검색 페이지에는 조회수를 기준으로 정렬.
+     */
+    @GetMapping("/board/search")
+    public ResponseEntity<Page<Board>> boardSearch(
+            @PageableDefault(page = 0, size = 10)
+            @SortDefault.SortDefaults({
+                    @SortDefault(sort = "view", direction = Sort.Direction.DESC),
+                    @SortDefault(sort = "id", direction = Sort.Direction.DESC)
+            }) Pageable pageable,
+            @RequestParam("keyword") String keyword
+    ) {
+        Page<Board> board = boardService.searchBoard(keyword, pageable);
+
+        return ResponseEntity.ok(board);
+    }
+
+    /*
+    * 카테고리 페이지는 좋아요를 기준으로 정렬함.
+     */
+    @GetMapping("/board/category/{category}")
+    public ResponseEntity<Page<Board>> boardCategoryList(
+            @PathVariable("category") String category,
+            @PageableDefault(page = 0, size = 10)
+            @SortDefault.SortDefaults({
+                    @SortDefault(sort = "good", direction = Sort.Direction.DESC),
+                    @SortDefault(sort = "id", direction = Sort.Direction.DESC)
+            }) Pageable pageable
+    ) {
+        Page<Board> categoryList = boardService.getCategoryList(category, pageable);
+
+        return ResponseEntity.ok(categoryList);
     }
 
     @GetMapping("/board/post")
@@ -63,7 +100,8 @@ public class BoardController {
 
     /*
     detail에서는 수정과 삭제가 가능하다.
-    수정과 삭제는 게시글의 작성자만 가능하며 이를 판별하기 위해 현재 유저를 같이 map으로 보내준다.
+    수정과 삭제는 게시글의 작성자만 가능하고,
+     이를 판별하기 위해 현재 유저를 같이 map으로 보내준다.
      */
     @GetMapping("/board/{id}")
     public ResponseEntity<Map<String, Object>> boardDetail(
@@ -135,5 +173,5 @@ public class BoardController {
                 .build();
     }
 
-    //검색, 카테고리, 작가/마이페이지
+    //작가/마이페이지
 }

@@ -110,7 +110,7 @@ public class BoardController {
             @RequestBody BoardDto boardDto
     ) {
         Long boardId = boardService.editBoard(id, boardDto);
-        log.info("게시글" + id + "업데이트 완료!!");
+        log.info("게시글 " + id + " 업데이트 완료!!");
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setLocation(URI.create("/board/" + boardId));
@@ -121,5 +121,19 @@ public class BoardController {
                 .build();
     }
 
-    //삭제, 검색, 카테고리, 작가/마이페이지
+    @PostMapping("/board/delete/{id}")
+    public ResponseEntity<?> boardDelete(@PathVariable("id") Long id) {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setLocation(URI.create("/board"));
+
+        boardService.deleteBoard(id);
+        log.info("게시글 " + id + " 삭제 완료!!");
+
+        return ResponseEntity
+                .status(HttpStatus.MOVED_PERMANENTLY)
+                .headers(httpHeaders)
+                .build();
+    }
+
+    //검색, 카테고리, 작가/마이페이지
 }

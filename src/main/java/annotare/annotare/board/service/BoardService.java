@@ -59,4 +59,9 @@ public class BoardService {
 
         return boardRepository.save(boardDto.toEntity()).getId();
     }
+
+    @Transactional
+    public void deleteBoard(Long id) {
+        boardRepository.deleteById(id);
+    }
 }

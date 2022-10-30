@@ -59,7 +59,7 @@ public class UserService implements UserDetailsService {
         그 다음부터 어드민이 업데이트 할때에는 auth 칼럼으로 판별해서 db 업데이트 하지않고,
         grandtedauthority 만 업데이트 해준다.
          */
-        if (user.getAuth() != Role.ADMIN && ("admin@libreria.com").equals(email)) {
+        if (user.getAuth() != Role.ADMIN && ("admin@annotare.com").equals(email)) {
             authorities.add(new SimpleGrantedAuthority(Role.ADMIN.getValue()));
             userRepository.updateAuth(Role.ADMIN, userDto.getEmail());
         } else if (user.getAuth() == Role.ADMIN) {

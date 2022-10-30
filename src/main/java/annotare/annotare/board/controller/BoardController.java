@@ -74,7 +74,7 @@ public class BoardController {
         Board board = boardService.getDetail(id);
 
         boardService.updateView(id);
-        log.info("좋아요 업데이트!!");
+        log.info("게시글 id=" + id + " 조회수 업데이트 성공!!");
 
         map.put("body", board);
         map.put("writer", board.getUsers().getEmail());
@@ -89,7 +89,7 @@ public class BoardController {
         httpHeaders.setLocation(URI.create("/board/" + id));
 
         boardService.updateGood(id);
-        log.info("좋아요 업데이트 !!");
+        log.info("게시글 id=" + id + " 좋아요 업데이트 !!");
 
         return ResponseEntity
                 .status(HttpStatus.MOVED_PERMANENTLY)
@@ -110,7 +110,7 @@ public class BoardController {
             @RequestBody BoardDto boardDto
     ) {
         Long boardId = boardService.editBoard(id, boardDto);
-        log.info("게시글 " + id + " 업데이트 완료!!");
+        log.info("게시글 id=" + id + " 업데이트 완료!!");
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setLocation(URI.create("/board/" + boardId));
@@ -127,7 +127,7 @@ public class BoardController {
         httpHeaders.setLocation(URI.create("/board"));
 
         boardService.deleteBoard(id);
-        log.info("게시글 " + id + " 삭제 완료!!");
+        log.info("게시글 id=" + id + " 삭제 완료!!");
 
         return ResponseEntity
                 .status(HttpStatus.MOVED_PERMANENTLY)

@@ -83,5 +83,19 @@ public class BoardController {
         return ResponseEntity.ok(map);
     }
 
-    // 좋아요 업데이트, 수정, 삭제, 검색, 카테고리, 작가/마이페이지
+    @PostMapping("/board/good/{id}")
+    public ResponseEntity<?> boardClickGood(@PathVariable("id") Long id) {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setLocation(URI.create("/board/" + id));
+
+        boardService.updateGood(id);
+        log.info("좋아요 업데이트 !!");
+
+        return ResponseEntity
+                .status(HttpStatus.MOVED_PERMANENTLY)
+                .headers(httpHeaders)
+                .build();
+    }
+
+    //수정, 삭제, 검색, 카테고리, 작가/마이페이지
 }

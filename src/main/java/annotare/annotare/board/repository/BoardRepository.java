@@ -19,4 +19,8 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     @Modifying
     @Query("update Board b set b.view = b.view + 1 where b.id = :id")
     void updateView(@Param("id") Long id);
+
+    @Modifying
+    @Query("update Board b set b.good = b.good + 1 where b.id = :id")
+    void updateGood(@Param("id") Long id);
 }

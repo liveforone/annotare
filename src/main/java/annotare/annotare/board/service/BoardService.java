@@ -25,6 +25,10 @@ public class BoardService {
         return boardRepository.findBoardAll(pageable);
     }
 
+    public Board getDetail(Long id) {
+        return boardRepository.findOneById(id);
+    }
+
     @Transactional
     public Long saveBoard(String writer, BoardDto boardDto) {
         Users users = userRepository.findByEmail(writer);
@@ -32,10 +36,6 @@ public class BoardService {
         boardDto.setUsers(users);
 
         return boardRepository.save(boardDto.toEntity()).getId();
-    }
-
-    public Board getDetail(Long id) {
-        return boardRepository.findOneById(id);
     }
 
     @Transactional

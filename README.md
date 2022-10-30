@@ -99,6 +99,11 @@ ex) : 여행 -> travel 등
     "content" : "test content.",
     "category" : "travel"
 }
+{
+    "title" : "updated test",
+    "content" : "updated content.",
+    "category" : "travel"
+}
 ```
 
 ## DB ERD diagram

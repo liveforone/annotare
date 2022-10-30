@@ -86,7 +86,14 @@ ex) : 여행 -> travel 등
 ## json body
 ### users
 ```
-
+{
+    "email" : "yc1234@gmail.com",
+    "password" : "1234"
+}
+{
+    "email" : "admin@annotare.com",
+    "password" : "1234"
+}
 ```
 ### board
 ```

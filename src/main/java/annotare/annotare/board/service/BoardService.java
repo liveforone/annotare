@@ -47,4 +47,16 @@ public class BoardService {
     public void updateGood(Long id) {
         boardRepository.updateGood(id);
     }
+
+    @Transactional
+    public Long editBoard(Long id, BoardDto boardDto) {
+        Board board = boardRepository.findOneById(id);
+
+        boardDto.setId(board.getId());
+        boardDto.setGood(board.getGood());
+        boardDto.setView(board.getView());
+        boardDto.setUsers(board.getUsers());
+
+        return boardRepository.save(boardDto.toEntity()).getId();
+    }
 }

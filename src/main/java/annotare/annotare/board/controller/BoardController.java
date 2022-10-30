@@ -97,5 +97,29 @@ public class BoardController {
                 .build();
     }
 
-    //수정, 삭제, 검색, 카테고리, 작가/마이페이지
+    @GetMapping("/board/edit/{id}")
+    public ResponseEntity<Board> boardEditPage(@PathVariable("id") Long id) {
+        Board board = boardService.getDetail(id);
+
+        return ResponseEntity.ok(board);
+    }
+
+    @PostMapping("/board/edit/{id}")
+    public ResponseEntity<?> boardEdit(
+            @PathVariable("id") Long id,
+            @RequestBody BoardDto boardDto
+    ) {
+        Long boardId = boardService.editBoard(id, boardDto);
+        log.info("게시글" + id + "업데이트 완료!!");
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setLocation(URI.create("/board/" + boardId));
+
+        return ResponseEntity
+                .status(HttpStatus.MOVED_PERMANENTLY)
+                .headers(httpHeaders)
+                .build();
+    }
+
+    //삭제, 검색, 카테고리, 작가/마이페이지
 }

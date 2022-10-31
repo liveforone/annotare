@@ -18,7 +18,6 @@
 * 브런치와 다른점은 글을 쓰는 작가 자체가 브랜드가 됨.(작품이 존재하지 않음)
 * rest-api 서버
 * 화면을 위한 설계가 같이 녹아있음.
-위키 필요시 기재.
 
 ## 설계
 * 권한은 두개 MEMBER와 ADMIN이 있다.
@@ -164,10 +163,4 @@ ex) : 여행 -> travel 등
 * /follow/writerfollower/{writer} - get
 
 ## DB ERD diagram
-
-좋은 커밋 메세지
-Feat : 추가
-Fix : 수정
-Docs : 문서수정
-Refactor : 리팩토링
-첫 글자는 대문자로
+![스크린샷(137)](https://user-images.githubusercontent.com/88976237/198957120-4ff7705c-a355-48b4-bbc7-9dde7fcc1dbb.png)

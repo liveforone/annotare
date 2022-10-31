@@ -23,6 +23,10 @@ public class CommentService {
         return commentRepository.findCommentList(boardId, pageable);
     }
 
+    public Comment getComment(Long id) {
+        return commentRepository.findOneById(id);
+    }
+
     @Transactional
     public void saveComment(Long boardId, CommentDto commentDto, String writer) {
         Board board = boardRepository.findOneById(boardId);
@@ -31,5 +35,16 @@ public class CommentService {
         commentDto.setWriter(writer);
 
         commentRepository.save(commentDto.toEntity());
+    }
+
+    @Transactional
+    public Long editComment(Long id, CommentDto commentDto) {
+        Comment comment = commentRepository.findOneById(id);
+
+        commentDto.setId(comment.getId());
+        commentDto.setWriter(comment.getWriter());
+        commentDto.setBoard(comment.getBoard());
+
+        return commentRepository.save(commentDto.toEntity()).getBoard().getId();
     }
 }

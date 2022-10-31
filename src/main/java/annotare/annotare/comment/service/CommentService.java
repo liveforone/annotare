@@ -47,4 +47,14 @@ public class CommentService {
 
         return commentRepository.save(commentDto.toEntity()).getBoard().getId();
     }
+
+    @Transactional
+    public Long deleteComment(Long id) {
+        Comment comment = commentRepository.findOneById(id);
+        Long boardId = comment.getBoard().getId();
+
+        commentRepository.deleteById(id);
+
+        return boardId;
+    }
 }

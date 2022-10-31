@@ -28,17 +28,25 @@ public class CommentController {
 
     private final CommentService commentService;
 
+    /*
+    수정과 삭제 버튼을 알맞게 보여주어야하기 때문에 현재 유저를 같이 보내준다.
+     */
     @GetMapping("/comment/{boardId}")
-    public ResponseEntity<?> commentList(
+    public ResponseEntity<Map<String, Object>> commentList(
             @PathVariable("boardId") Long boardId,
             @PageableDefault(page = 0, size = 10)
             @SortDefault.SortDefaults({
                     @SortDefault(sort = "id", direction = Sort.Direction.DESC)
-            }) Pageable pageable
+            }) Pageable pageable,
+            Principal principal
     ) {
+        Map<String, Object> map = new HashMap<>();
         Page<Comment> commentList = commentService.getCommentList(boardId, pageable);
 
-        return ResponseEntity.ok(commentList);
+        map.put("body", commentList);
+        map.put("user", principal.getName());
+
+        return ResponseEntity.ok(map);
     }
 
     @PostMapping("/comment/post/{boardId}")
@@ -60,7 +68,8 @@ public class CommentController {
     }
 
     /*
-    서버 내에서 작성자와 해당 url을 요청한 현재 객체를 판별한다.
+    뷰에 이미 현재 유저를 보내주어서 판별을 일차적으로 진행하고
+    두번째로 서버 내에서 작성자와 해당 url을 요청한 현재 객체를 판별한다.
     다르다면 잘못된 요청으로 넘긴다.
      */
     @GetMapping("/comment/edit/{id}")
@@ -97,5 +106,35 @@ public class CommentController {
                 .status(HttpStatus.MOVED_PERMANENTLY)
                 .headers(httpHeaders)
                 .build();
+    }
+
+    /*
+    삭제 또한 수정과 마찬가지로 뷰에서 현재객체를 보내주어서 판별이 끝나있다.
+    하지만 보다 정확하게 유저를 판별하기위해서 서버상에서 한 번 더 판별해준다.
+     */
+    @PostMapping("/comment/delete/{id}")
+    public ResponseEntity<?> commentDelete(
+            @PathVariable("id") Long id,
+            Principal principal
+    ) {
+        Comment comment = commentService.getComment(id);
+
+        if (Objects.equals(comment.getWriter(), principal.getName())) {
+            Long boardId = commentService.deleteComment(id);
+            log.info("댓글 삭제 완료!!");
+
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setLocation(URI.create("/comment/" + boardId));
+
+            return ResponseEntity
+                    .status(HttpStatus.MOVED_PERMANENTLY)
+                    .headers(httpHeaders)
+                    .build();
+        } else {
+            log.info("작성자와 현재 유저가 일치하지 않습니다.");
+            return ResponseEntity
+                    .status(HttpStatus.FORBIDDEN)
+                    .build();
+        }
     }
 }

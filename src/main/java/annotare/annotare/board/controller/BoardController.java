@@ -19,6 +19,7 @@ import java.net.URI;
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @RestController
 @RequiredArgsConstructor
@@ -142,34 +143,63 @@ public class BoardController {
         return ResponseEntity.ok(board);
     }
 
+    /*
+    뷰에서 한 번 작성자와 현재 유저를 판별해주었지만
+    서버단에서 민감한 수정/삭제는 한 번더 판별해준다.
+     */
     @PostMapping("/board/edit/{id}")
     public ResponseEntity<?> boardEdit(
             @PathVariable("id") Long id,
-            @RequestBody BoardDto boardDto
+            @RequestBody BoardDto boardDto,
+            Principal principal
     ) {
-        Long boardId = boardService.editBoard(id, boardDto);
-        log.info("게시글 id=" + id + " 업데이트 완료!!");
+        Board board = boardService.getDetail(id);
 
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setLocation(URI.create("/board/" + boardId));
+        if (Objects.equals(board.getUsers().getEmail(), principal.getName())) {
+            Long boardId = boardService.editBoard(id, boardDto);
+            log.info("게시글 id=" + id + " 업데이트 완료!!");
 
-        return ResponseEntity
-                .status(HttpStatus.MOVED_PERMANENTLY)
-                .headers(httpHeaders)
-                .build();
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setLocation(URI.create("/board/" + boardId));
+
+            return ResponseEntity
+                    .status(HttpStatus.MOVED_PERMANENTLY)
+                    .headers(httpHeaders)
+                    .build();
+        } else {
+            log.info("작성자와 현재 유저가 일치하지 않습니다.");
+            return ResponseEntity
+                    .status(HttpStatus.FORBIDDEN)
+                    .build();
+        }
     }
 
+    /*
+    수정과 마찬가지로 한 번 더 서버단에서 작성자와 현재 유저를 판별해준다.
+     */
     @PostMapping("/board/delete/{id}")
-    public ResponseEntity<?> boardDelete(@PathVariable("id") Long id) {
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setLocation(URI.create("/board"));
+    public ResponseEntity<?> boardDelete(
+            @PathVariable("id") Long id,
+            Principal principal
+    ) {
+        Board board = boardService.getDetail(id);
 
-        boardService.deleteBoard(id);
-        log.info("게시글 id=" + id + " 삭제 완료!!");
+        if (Objects.equals(board.getUsers().getEmail(), principal.getName())) {
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setLocation(URI.create("/board"));
 
-        return ResponseEntity
-                .status(HttpStatus.MOVED_PERMANENTLY)
-                .headers(httpHeaders)
-                .build();
+            boardService.deleteBoard(id);
+            log.info("게시글 id=" + id + " 삭제 완료!!");
+
+            return ResponseEntity
+                    .status(HttpStatus.MOVED_PERMANENTLY)
+                    .headers(httpHeaders)
+                    .build();
+        } else {
+            log.info("작성자와 현재 유저가 일치하지 않습니다.");
+            return ResponseEntity
+                    .status(HttpStatus.FORBIDDEN)
+                    .build();
+        }
     }
 }

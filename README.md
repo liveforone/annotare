@@ -116,6 +116,9 @@ ex) : 여행 -> travel 등
 {
     "content" : "this is comment"
 }
+{
+    "content" : "updated comment"
+}
 ```
 
 ## api

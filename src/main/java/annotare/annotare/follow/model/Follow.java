@@ -21,9 +21,9 @@ public class Follow {
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonBackReference
     @JoinColumn(name = "users_id")
-    private Users users;
+    private Users users;  //나
 
-    private String following;
+    private String following;  //내가 팔로우 하는 사람.
 
     @Builder
     public Follow(Long id, Users users, String following) {

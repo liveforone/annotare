@@ -155,6 +155,13 @@ ex) : 여행 -> travel 등
 * /comment/post/{boardId} - post
 * /comment/edit/{id} - get/post
 * /comment/delete/{id} - post
+### follow
+* /follow/{email} - post
+* /follow/myfollow - get
+* /unfollow/{email} - post
+* /follow/myfollower - get
+* /follow/writerfollow/{writer} - get
+* /follow/writerfollower/{writer} - get
 
 ## DB ERD diagram
 

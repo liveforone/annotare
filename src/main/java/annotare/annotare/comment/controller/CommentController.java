@@ -67,45 +67,45 @@ public class CommentController {
                 .build();
     }
 
+    @GetMapping("/comment/edit/{id}")
+    public ResponseEntity<Comment> commentEditPage(
+            @PathVariable("id") Long id
+    ) {
+        Comment comment = commentService.getComment(id);
+        log.info("작성자와 현재 유저가 일치합니다. 접근 성공.");
+        return ResponseEntity.ok(comment);
+    }
+
     /*
     뷰에 이미 현재 유저를 보내주어서 판별을 일차적으로 진행하고
     두번째로 서버 내에서 작성자와 해당 url을 요청한 현재 객체를 판별한다.
     다르다면 잘못된 요청으로 넘긴다.
      */
-    @GetMapping("/comment/edit/{id}")
-    public ResponseEntity<Comment> commentEditPage(
+    @PostMapping("/comment/edit/{id}")
+    public ResponseEntity<?> commentEdit(
             @PathVariable("id") Long id,
+            @RequestBody CommentDto commentDto,
             Principal principal
     ) {
         Comment comment = commentService.getComment(id);
 
-        //== 정상 ==//
-        if (Objects.equals(principal.getName(), comment.getWriter())) {
-            log.info("작성자와 현재 유저가 일치합니다. 접근 성공.");
-            return ResponseEntity.ok(comment);
+        if (Objects.equals(comment.getWriter(), principal.getName())) {
+            Long boardId = commentService.editComment(id, commentDto);
+            log.info("댓글 id=" + id + " 수정 성공!!");
+
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setLocation(URI.create("/comment/" + boardId));
+
+            return ResponseEntity
+                    .status(HttpStatus.MOVED_PERMANENTLY)
+                    .headers(httpHeaders)
+                    .build();
         } else {
             log.info("작성자와 현재 유저가 일치하지 않습니다.");
             return ResponseEntity
                     .status(HttpStatus.FORBIDDEN)
                     .build();
         }
-    }
-
-    @PostMapping("/comment/edit/{id}")
-    public ResponseEntity<?> commentEdit(
-            @PathVariable("id") Long id,
-            @RequestBody CommentDto commentDto
-    ) {
-        Long boardId = commentService.editComment(id, commentDto);
-        log.info("댓글 id=" + id + " 수정 성공!!");
-
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setLocation(URI.create("/comment/" + boardId));
-
-        return ResponseEntity
-                .status(HttpStatus.MOVED_PERMANENTLY)
-                .headers(httpHeaders)
-                .build();
     }
 
     /*

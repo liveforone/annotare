@@ -127,11 +127,27 @@ ex) : 여행 -> travel 등
 
 ## api
 ### users
-
+* /
+* /user/signup
+* /user/login
+* /user/mypage
+* /user/writer/{writer}
+* /user/prohibition
+* /admin
 ### board
-
+* /board - get
+* /board/search - get
+* /board/category/{category} - get
+* /board/post - get/post
+* /board/{id} - get
+* /board/good/{id} - post
+* /board/edit/{id} - get/post
+* /board/delete/{id} - post
 ### comment
-
+* /comment/{boardId} - get
+* /comment/post/{boardId} - post
+* /comment/edit/{id} - get/post
+* /comment/delete/{id} - post
 
 ## DB ERD diagram
 

@@ -111,11 +111,19 @@ ex) : 여행 -> travel 등
     "category" : "travel"
 }
 ```
+### comment
+```
+{
+    "content" : "this is comment"
+}
+```
 
 ## api
 ### users
 
 ### board
+
+### comment
 
 
 ## DB ERD diagram
